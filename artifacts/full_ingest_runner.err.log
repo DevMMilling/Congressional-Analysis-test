@@ -1,0 +1,2 @@
+2026-04-16 12:30:04,049 INFO backend.app.services.jobs {"event": "job_created", "job_id": "1", "job_type": "backfill"}
+2026-04-16 12:30:04,057 INFO backend.app.services.jobs {"event": "job_started", "job_id": "1", "job_type": "backfill"}

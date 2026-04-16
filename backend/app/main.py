@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .bootstrap import bootstrap_database, ensure_default_records
-from .config import get_settings
+from .config import get_settings, validate_settings
 from .db import SessionLocal
 from .routers import alerts, analytics, exports, ingest, models, politicians, signals, stocks, system_status, trades
 from .services.alerts import dispatch_alerts
@@ -20,6 +20,7 @@ scheduler = BackgroundScheduler(timezone=settings.scheduler_timezone)
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     bootstrap_database()
+    validate_settings(settings)
     with SessionLocal() as db:
         ensure_default_records(db)
     if not scheduler.running:

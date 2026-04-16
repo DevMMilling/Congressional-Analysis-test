@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import httpx
@@ -60,15 +61,81 @@ class CapitolTradesScraper:
 
     def parse_html(self, html: str) -> list[ScrapedTrade]:
         soup = BeautifulSoup(html, "lxml")
+        table_rows = [row for row in soup.find_all("tr") if row.find("td")]
+        if table_rows:
+            trades = []
+            for index, row in enumerate(table_rows):
+                trade = self._parse_table_row(row, index)
+                if trade:
+                    trades.append(trade)
+            if trades:
+                return trades
+
         # Prefer extracting div texts to preserve ordering across parsers
         lines = [div.get_text(strip=True) for div in soup.find_all("div")]
         trades: list[ScrapedTrade] = []
         for idx, line in enumerate(lines):
-            if line == "Goto trade detail page." and idx >= 13:
-                trade = self._parse_chunk(lines[idx - 13 : idx + 1], len(trades))
-                if trade:
-                    trades.append(trade)
+            if line == "Goto trade detail page.":
+                for offset in (14, 13):
+                    if idx >= offset:
+                        trade = self._parse_chunk(lines[idx - offset : idx + 1], len(trades))
+                        if trade:
+                            trades.append(trade)
+                            break
         return trades
+
+    def _parse_table_row(self, row, index: int) -> ScrapedTrade | None:
+        try:
+            politician_name = _text_or_none(row.select_one("h2.politician-name"))
+            party = _text_or_none(row.select_one(".politician-info .party"))
+            chamber = _text_or_none(row.select_one(".politician-info .chamber"))
+            state = _text_or_none(row.select_one(".politician-info .us-state-compact"))
+            issuer_name = _text_or_none(row.select_one(".issuer-name"))
+            ticker_text = _text_or_none(row.select_one(".issuer-ticker"))
+            ticker = ticker_text.split(":")[0] if ticker_text and ":" in ticker_text else ticker_text
+
+            cells = row.find_all("td")
+            if len(cells) < 10 or not politician_name or not issuer_name:
+                return None
+
+            disclosure_date = _parse_table_date(list(cells[2].stripped_strings))
+            transaction_date = _parse_table_date(list(cells[3].stripped_strings))
+            lag = _extract_int(" ".join(cells[4].stripped_strings))
+            owner_type = " ".join(cells[5].stripped_strings) or None
+            transaction_type = " ".join(cells[6].stripped_strings).lower()
+            amount_text = " ".join(cells[7].stripped_strings) or None
+            price = _parse_price(" ".join(cells[8].stripped_strings))
+
+            detail_link = next((a.get("href") for a in row.find_all("a", href=True) if "/trades/" in a.get("href", "")), None)
+            trade_id = detail_link.rsplit("/", 1)[-1] if detail_link else None
+            source_trade_id = trade_id or slugify(
+                "-".join(filter(None, [politician_name, issuer_name, str(transaction_date), transaction_type, str(index)]))
+            )
+
+            return ScrapedTrade(
+                source_trade_id=source_trade_id,
+                politician_name=politician_name,
+                party=party,
+                chamber=chamber,
+                state=state,
+                issuer_name=issuer_name,
+                ticker=ticker,
+                disclosure_date=disclosure_date,
+                transaction_date=transaction_date,
+                disclosure_lag_days=lag,
+                owner_type=owner_type,
+                transaction_type=transaction_type,
+                amount_text=amount_text,
+                price_at_trade=price,
+                notes=None,
+                raw_payload={
+                    "detail_url": detail_link,
+                    "issuer_ticker": ticker_text,
+                    "cells": [" ".join(cell.stripped_strings) for cell in cells],
+                },
+            )
+        except Exception:
+            return None
 
     def _parse_chunk(self, chunk: list[str], index: int) -> ScrapedTrade | None:
         try:
@@ -195,6 +262,47 @@ def _parse_price(value: str | None) -> float | None:
         return None
 
 
+def _text_or_none(node) -> str | None:
+    if node is None:
+        return None
+    text = node.get_text(" ", strip=True)
+    return text or None
+
+
+def _extract_int(value: str | None) -> int | None:
+    if not value:
+        return None
+    digits = "".join(ch for ch in value if ch.isdigit())
+    return int(digits) if digits else None
+
+
+def _parse_table_date(parts: list[str]) -> object | None:
+    if not parts:
+        return None
+    normalized = " ".join(parts).strip()
+    direct = parse_human_date(normalized)
+    if direct:
+        return direct
+    if len(parts) == 1:
+        tokens = parts[0].split()
+        if len(tokens) >= 2:
+            tail = tokens[-1].lower()
+            if tail == "today":
+                return datetime.now(UTC).date()
+            if tail == "yesterday":
+                return datetime.now(UTC).date() - timedelta(days=1)
+    if len(parts) == 2:
+        head, tail = parts
+        if tail.lower() == "today":
+            return datetime.now(UTC).date()
+        if tail.lower() == "yesterday":
+            return datetime.now(UTC).date() - timedelta(days=1)
+        direct = parse_human_date(f"{head} {tail}")
+        if direct:
+            return direct
+    return None
+
+
 def upsert_trade(db: Session, scraped: ScrapedTrade) -> Trade:
     raw = db.execute(select(RawTradePayload).where(RawTradePayload.source_trade_id == scraped.source_trade_id)).scalar_one_or_none()
     if raw is None:
@@ -261,13 +369,20 @@ def upsert_trade(db: Session, scraped: ScrapedTrade) -> Trade:
 class CongressMetadataImporter:
     def sync_remote_metadata(self, db: Session) -> dict:
         legislators_text = self._get(settings.legislators_url)
-        committee_text = self._get(settings.committee_memberships_url)
         legislators = yaml.safe_load(legislators_text)
-        committee_payload = json.loads(committee_text)
         legislator_count = self._apply_legislators(db, legislators)
-        membership_rows = _flatten_committee_payload(committee_payload)
-        committee_count = self.apply_committee_memberships(db, membership_rows)
-        return {"legislators_updated": legislator_count, "committee_roles_added": committee_count}
+        committee_count = 0
+        metadata_status = {"legislators_updated": legislator_count, "committee_roles_added": committee_count}
+        try:
+            committee_text = self._get(settings.committee_memberships_url)
+            committee_payload = json.loads(committee_text)
+            membership_rows = _flatten_committee_payload(committee_payload)
+            committee_count = self.apply_committee_memberships(db, membership_rows)
+            metadata_status["committee_roles_added"] = committee_count
+        except Exception:
+            # Committee memberships are optional enrichment; keep ingest working when the upstream path changes.
+            metadata_status["committee_metadata_unavailable"] = True
+        return metadata_status
 
     @retry(wait=wait_exponential(min=1, max=8), stop=stop_after_attempt(3))
     def _get(self, url: str) -> str:

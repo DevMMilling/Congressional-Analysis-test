@@ -117,6 +117,8 @@ function readTradeFilters(searchParams) {
     chamber: searchParams.get("chamber") || "",
     party: searchParams.get("party") || "",
     state: searchParams.get("state") || "",
+    date_from: searchParams.get("date_from") || "",
+    date_to: searchParams.get("date_to") || "",
     sort: searchParams.get("sort") || "disclosure_date",
     order: searchParams.get("order") || "desc",
     page_size: searchParams.get("page_size") || "20",
@@ -135,6 +137,8 @@ function toQuery(filters, page) {
     chamber: filters.chamber.trim(),
     party: filters.party.trim().toUpperCase(),
     state: filters.state.trim().toUpperCase(),
+    date_from: filters.date_from,
+    date_to: filters.date_to,
     sort: filters.sort,
     order: filters.order,
     page,
@@ -359,6 +363,22 @@ export default function TradesPage() {
             <input value={tradeFilters.state} onChange={(event) => updateFilter("state", event.target.value)} placeholder="CA" />
           </label>
           <label>
+            Date from
+            <input
+              type="date"
+              value={tradeFilters.date_from}
+              onChange={(event) => updateFilter("date_from", event.target.value)}
+            />
+          </label>
+          <label>
+            Date to
+            <input
+              type="date"
+              value={tradeFilters.date_to}
+              onChange={(event) => updateFilter("date_to", event.target.value)}
+            />
+          </label>
+          <label>
             Sort
             <select value={tradeFilters.sort} onChange={(event) => updateFilter("sort", event.target.value)}>
               <option value="disclosure_date">Disclosure date</option>
@@ -395,7 +415,7 @@ export default function TradesPage() {
           <button type="button" onClick={resetFilters}>
             Reset filters
           </button>
-          <button type="button" onClick={() => api.downloadTradesCsv({ ...query, page: undefined, page_size: undefined })}>
+          <button type="button" onClick={() => api.downloadTrades({ ...query, page: undefined, page_size: undefined })}>
             Download CSV
           </button>
           <span className="muted">{loading ? "Refreshing trades..." : `${pagination.totalCount || rows.length} trades loaded`}</span>

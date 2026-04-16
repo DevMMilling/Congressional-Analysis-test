@@ -1,0 +1,113 @@
+[2026-04-16T12:30:04] Starting best-effort full ingest
+[2026-04-16T12:30:12] Metadata sync complete: {'legislators_updated': 537, 'committee_roles_added': 0, 'committee_metadata_unavailable': True}
+[2026-04-16T12:30:14] Trade page 1: loaded 96 rows (96 total so far)
+[2026-04-16T12:30:30] Trade page 10: loaded 96 rows (960 total so far)
+[2026-04-16T12:30:47] Trade page 20: loaded 96 rows (1920 total so far)
+[2026-04-16T12:31:04] Trade page 30: loaded 96 rows (2880 total so far)
+[2026-04-16T12:31:22] Trade page 40: loaded 96 rows (3840 total so far)
+[2026-04-16T12:31:40] Trade page 50: loaded 96 rows (4800 total so far)
+[2026-04-16T12:31:57] Trade page 60: loaded 96 rows (5760 total so far)
+[2026-04-16T12:32:14] Trade page 70: loaded 96 rows (6720 total so far)
+[2026-04-16T12:32:47] Trade page 80: loaded 96 rows (7680 total so far)
+[2026-04-16T12:33:23] Trade page 90: loaded 96 rows (8640 total so far)
+[2026-04-16T12:33:58] Trade page 100: loaded 96 rows (9600 total so far)
+[2026-04-16T12:34:33] Trade page 110: loaded 96 rows (10560 total so far)
+[2026-04-16T12:35:07] Trade page 120: loaded 96 rows (11520 total so far)
+[2026-04-16T12:35:42] Trade page 130: loaded 96 rows (12480 total so far)
+[2026-04-16T12:36:17] Trade page 140: loaded 96 rows (13440 total so far)
+[2026-04-16T12:36:52] Trade page 150: loaded 96 rows (14400 total so far)
+[2026-04-16T12:37:26] Trade page 160: loaded 96 rows (15360 total so far)
+[2026-04-16T12:38:03] Trade page 170: loaded 96 rows (16320 total so far)
+[2026-04-16T12:38:38] Trade page 180: loaded 96 rows (17280 total so far)
+[2026-04-16T12:39:13] Trade page 190: loaded 96 rows (18240 total so far)
+[2026-04-16T12:39:45] Trade page 200: loaded 96 rows (19200 total so far)
+[2026-04-16T12:40:20] Trade page 210: loaded 96 rows (20160 total so far)
+[2026-04-16T12:40:53] Trade page 220: loaded 96 rows (21120 total so far)
+[2026-04-16T12:41:28] Trade page 230: loaded 96 rows (22080 total so far)
+[2026-04-16T12:42:07] Trade page 240: loaded 96 rows (23040 total so far)
+[2026-04-16T12:42:46] Trade page 250: loaded 96 rows (24000 total so far)
+[2026-04-16T12:43:36] Trade page 260: loaded 96 rows (24960 total so far)
+[2026-04-16T12:44:18] Trade page 270: loaded 96 rows (25920 total so far)
+[2026-04-16T12:45:02] Trade page 280: loaded 96 rows (26880 total so far)
+[2026-04-16T12:45:43] Trade page 290: loaded 96 rows (27840 total so far)
+[2026-04-16T12:46:26] Trade page 300: loaded 96 rows (28800 total so far)
+[2026-04-16T12:47:07] Trade page 310: loaded 96 rows (29760 total so far)
+[2026-04-16T12:47:51] Trade page 320: loaded 96 rows (30720 total so far)
+[2026-04-16T12:48:35] Trade page 330: loaded 96 rows (31680 total so far)
+[2026-04-16T12:49:18] Trade page 340: loaded 96 rows (32640 total so far)
+[2026-04-16T12:49:57] Trade page 350: loaded 96 rows (33600 total so far)
+[2026-04-16T12:50:39] Trade page 360: loaded 96 rows (34560 total so far)
+[2026-04-16T12:51:24] Trade page 370: loaded 96 rows (35520 total so far)
+[2026-04-16T12:51:26] Trade page 371: loaded 13 rows (35533 total so far)
+[2026-04-16T12:51:27] Trade page 372 returned no rows; stopping scrape
+[2026-04-16T12:51:27] Trade ingest complete: 35533 rows across 371 pages and 1961 tickers
+[2026-04-16T12:51:33] Market data failed for $AERO: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:51:35] Market data failed for $BTC: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:51:37] Market data failed for $ETH: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:51:39] Market data failed for $GRT: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:51:41] Market data failed for $LTC: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:51:44] Market data failed for $SKI: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:51:47] Market data failed for $SOL: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:51:49] Market data failed for $SUI: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:51:52] Market data failed for $VELO: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:51:54] Market data failed for $VIRTUAL: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:51:56] Market data failed for $XRP: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:51:58] Market data failed for 1093: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:01] Market data failed for 1494391D: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:03] Market data failed for 3733Z: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:05] Market data failed for 559242Z: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:12] Market data failed for 5672A: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:14] Market data failed for 7410Z: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:17] Market data failed for 8376923Z: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:19] Market data failed for A: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:21] Market data failed for AA: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:23] Market data failed for AAGIY: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:25] Market data failed for AAIC: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:28] Market data failed for AAL: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:30] Market data failed for AAON: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:32] Market data failed for AAP: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:35] Market data failed for AAPL: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:37] Market data failed for AAVMY: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:39] Market data failed for AAXJ: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:43] Market data failed for AB: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:46] Market data failed for ABB: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:48] Market data failed for ABBV: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:50] Market data failed for ABCB: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:53] Market data failed for ABEV: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:55] Market data failed for ABG: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:57] Market data failed for ABNB: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:52:59] Market data failed for ABNDX: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:53:02] Market data failed for ABT: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:53:04] Market data failed for ACF: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:53:06] Market data failed for ACGL: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:53:09] Market data failed for ACI: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:53:12] Market data failed for ACIW: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:53:15] Market data failed for ACN: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:53:17] Market data failed for ADBE: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:53:19] Market data failed for ADC: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:53:22] Market data failed for ADDYY: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:53:24] Market data failed for ADI: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:53:26] Market data failed for ADM: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:53:28] Market data failed for ADMR: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:53:31] Market data failed for ADP: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:53:33] Market data failed for ADRNY: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:53:36] Market data failed for ADSK: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:53:38] Market data failed for ADYEY: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:12] Market data failed for AEE: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:14] Market data failed for AEG: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:16] Market data failed for AEIS: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:18] Market data failed for AEO: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:20] Market data failed for AEP: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:22] Market data failed for AEPGX: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:24] Market data failed for AER: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:27] Market data failed for AES: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:29] Market data failed for AESI: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:32] Market data failed for AFG: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:35] Market data failed for AFL: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:37] Market data failed for AGAE: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:40] Market data failed for AGCO: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:43] Market data failed for AGIO: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:46] Market data failed for AGR: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:50] Market data failed for AGTHX: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:52] Market data failed for AGX: Too Many Requests. Rate limited. Try after a while.
+[2026-04-16T12:54:54] Market data failed for AGZ: Too Many Requests. Rate limited. Try after a while.

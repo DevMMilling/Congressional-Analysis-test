@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import date, datetime
 
-from sqlalchemy import Boolean, Date, DateTime, Float, ForeignKey, Integer, JSON, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, Date, DateTime, Float, ForeignKey, Index, Integer, JSON, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .db import Base
@@ -76,7 +76,10 @@ class Issuer(Base, TimestampMixin):
 
 class Trade(Base, TimestampMixin):
     __tablename__ = "trades"
-    __table_args__ = (UniqueConstraint("source_trade_id", name="uq_trade_source_trade_id"),)
+    __table_args__ = (
+        UniqueConstraint("source_trade_id", name="uq_trade_source_trade_id"),
+        Index("ix_trade_politician_disclosure", "politician_id", "disclosure_date"),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     source_trade_id: Mapped[str] = mapped_column(String(255), index=True)
@@ -109,7 +112,10 @@ class Trade(Base, TimestampMixin):
 
 class MarketBar(Base, TimestampMixin):
     __tablename__ = "market_bars"
-    __table_args__ = (UniqueConstraint("ticker", "date", name="uq_market_bar_ticker_date"),)
+    __table_args__ = (
+        UniqueConstraint("ticker", "date", name="uq_market_bar_ticker_date"),
+        Index("ix_market_bar_ticker_date_cover", "ticker", "date"),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     issuer_id: Mapped[int | None] = mapped_column(ForeignKey("issuers.id"), index=True)
@@ -152,6 +158,9 @@ class Prediction(Base, TimestampMixin):
 
 class Signal(Base, TimestampMixin):
     __tablename__ = "signals"
+    __table_args__ = (
+        Index("ix_signal_type_confidence", "signal_type", "confidence"),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     signal_date: Mapped[date] = mapped_column(Date, index=True)

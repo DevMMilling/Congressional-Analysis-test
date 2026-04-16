@@ -10,7 +10,20 @@
       "Bash(where py *)",
       "Bash(where pytest *)",
       "Bash(py --version)",
-      "Bash(py -c ' *)"
+      "Bash(py -c ' *)",
+      "Bash(py -m pytest backend/tests/test_scraper.py::test_scraper_parses_single_trade -v)",
+      "WebSearch",
+      "WebFetch(domain:recharts.org)",
+      "Bash(npm show *)",
+      "Bash(npx --version)",
+      "Bash(cmd /c \"cd /d c:\\\\Users\\\\DevMat\\\\Documents\\\\repos\\\\Congressional-Analysis-test\\\\frontend && node --version && npm --version && npm show recharts version\")",
+      "Bash(cmd /c \"node --version && npm --version\")",
+      "Bash(powershell -Command \"node --version; npm --version\")",
+      "Bash(powershell -NonInteractive -Command \"Test-Path 'C:\\\\Program Files\\\\nodejs\\\\node.exe'\")",
+      "Bash(powershell -NonInteractive -Command \"Test-Path 'C:\\\\nvm\\\\current\\\\node.exe'\")",
+      "Bash(powershell -NonInteractive -Command \"Test-Path 'C:\\\\Users\\\\DevMat\\\\AppData\\\\Roaming\\\\nvm'\")",
+      "Bash(powershell -NonInteractive -Command \"Test-Path 'c:\\\\Users\\\\DevMat\\\\Documents\\\\repos\\\\Congressional-Analysis-test\\\\frontend\\\\node_modules'\")",
+      "Bash(powershell -NonInteractive -Command \"Test-Path 'c:\\\\Users\\\\DevMat\\\\Documents\\\\repos\\\\Congressional-Analysis-test\\\\frontend\\\\node_modules\\\\vite'\")"
     ]
   }
 }

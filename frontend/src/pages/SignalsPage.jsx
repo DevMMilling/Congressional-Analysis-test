@@ -10,6 +10,8 @@ export default function SignalsPage() {
     ticker: "",
     politician_id: "",
     min_confidence: "0",
+    date_from: "",
+    date_to: "",
     limit: "100",
   });
 
@@ -19,6 +21,8 @@ export default function SignalsPage() {
       ticker: filters.ticker.trim().toUpperCase(),
       politician_id: filters.politician_id.trim(),
       min_confidence: filters.min_confidence,
+      date_from: filters.date_from,
+      date_to: filters.date_to,
       limit: filters.limit,
     }),
     [filters],
@@ -32,7 +36,7 @@ export default function SignalsPage() {
       .getSignals(query)
       .then((data) => {
         if (active) {
-          setSignals(data);
+          setSignals(Array.isArray(data) ? data : data.items || []);
         }
       })
       .catch((fetchError) => {
@@ -61,8 +65,14 @@ export default function SignalsPage() {
       ticker: "",
       politician_id: "",
       min_confidence: "0",
+      date_from: "",
+      date_to: "",
       limit: "100",
     });
+  };
+
+  const handleDownload = () => {
+    api.downloadSignals({ ...query, limit: undefined }).catch(console.error);
   };
 
   return (
@@ -70,7 +80,7 @@ export default function SignalsPage() {
       <section className="card signal-filters">
         <p className="eyebrow">Signal ranking</p>
         <h2>Filter the signal feed</h2>
-        <p className="muted">Refine by type, ticker, politician ID, confidence, and result count.</p>
+        <p className="muted">Refine by type, ticker, politician ID, date range, confidence, and result count.</p>
         <div className="controls signal-controls">
           <label>
             Signal type
@@ -96,6 +106,22 @@ export default function SignalsPage() {
               value={filters.politician_id}
               onChange={(event) => updateFilter("politician_id", event.target.value)}
               placeholder="123"
+            />
+          </label>
+          <label>
+            Date from
+            <input
+              type="date"
+              value={filters.date_from}
+              onChange={(event) => updateFilter("date_from", event.target.value)}
+            />
+          </label>
+          <label>
+            Date to
+            <input
+              type="date"
+              value={filters.date_to}
+              onChange={(event) => updateFilter("date_to", event.target.value)}
             />
           </label>
           <label>
@@ -125,6 +151,9 @@ export default function SignalsPage() {
           <button type="button" onClick={resetFilters}>
             Reset filters
           </button>
+          <button type="button" onClick={handleDownload} disabled={loading}>
+            Download CSV
+          </button>
           <span className="muted">{loading ? "Refreshing signals..." : `${signals.length} results loaded`}</span>
         </div>
       </section>
@@ -139,19 +168,27 @@ export default function SignalsPage() {
         </div>
         {error ? <p className="signal-error">{error}</p> : null}
         <div className="table-like">
-          <div className="table-head">
+          <div className="table-head" style={{ gridTemplateColumns: "1fr 1.2fr 0.7fr 1fr 0.8fr 0.8fr" }}>
             <span>Date</span>
             <span>Type</span>
             <span>Ticker</span>
+            <span>Politician</span>
             <span>Confidence</span>
             <span>Action</span>
           </div>
-          {!loading && !error && signals.length === 0 ? <p className="muted signal-empty">No signals match the current filters.</p> : null}
+          {!loading && !error && signals.length === 0 ? (
+            <p className="muted signal-empty">No signals match the current filters.</p>
+          ) : null}
           {signals.map((signal) => (
-            <div className="table-row" key={signal.id}>
+            <div
+              className="table-row"
+              key={signal.id}
+              style={{ gridTemplateColumns: "1fr 1.2fr 0.7fr 1fr 0.8fr 0.8fr" }}
+            >
               <span>{signal.signal_date}</span>
               <span>{signal.signal_type}</span>
               <span>{signal.ticker || "n/a"}</span>
+              <span>{signal.politician_name || "n/a"}</span>
               <span>{((signal.confidence || 0) * 100).toFixed(0)}%</span>
               <span>{signal.recommendation || "watch"}</span>
             </div>

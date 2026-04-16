@@ -41,3 +41,26 @@ def get_settings() -> Settings:
     settings.cache_dir.mkdir(parents=True, exist_ok=True)
     settings.model_dir.mkdir(parents=True, exist_ok=True)
     return settings
+
+
+def validate_settings(s: "Settings") -> None:
+    """Raise ValueError if critical settings are misconfigured."""
+    import pytz
+
+    # Validate scheduler timezone
+    try:
+        pytz.timezone(s.scheduler_timezone)
+    except Exception:
+        raise ValueError(
+            f"Invalid scheduler_timezone: {s.scheduler_timezone!r}. "
+            "Must be a valid pytz timezone string (e.g. 'UTC', 'America/New_York')."
+        )
+
+    # Validate model_dir is writable
+    try:
+        s.model_dir.mkdir(parents=True, exist_ok=True)
+        _test = s.model_dir / ".write_test"
+        _test.write_text("ok")
+        _test.unlink()
+    except (OSError, AttributeError) as exc:
+        raise ValueError(f"model_dir {s.model_dir!r} is not writable: {exc}")

@@ -1,0 +1,11 @@
+{
+    "id":  1,
+    "job_type":  "backfill",
+    "status":  "failed",
+    "started_at":  "2026-04-16T10:11:18.678041",
+    "finished_at":  "2026-04-16T10:11:25.147169",
+    "message":  "RetryError[\u003cFuture at 0x1f28a4053a0 state=finished raised HTTPStatusError\u003e]",
+    "details":  {
+                    "page_count":  371
+                }
+}
