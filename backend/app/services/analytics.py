@@ -92,7 +92,12 @@ def build_dashboard_explorer(
         sectors=_distinct_issuer_sectors(db),
     )
 
-    query = select(Trade, Issuer.sector).outerjoin(Issuer, Trade.issuer_id == Issuer.id)
+    query = (
+        select(Trade, Issuer.sector)
+        .outerjoin(Issuer, Trade.issuer_id == Issuer.id)
+        .where(Trade.ticker.is_not(None))
+        .where(Trade.ticker != "")
+    )
     if politician_search:
         query = query.where(Trade.politician_name.ilike(f"%{politician_search.strip()}%"))
     if ticker:
@@ -152,8 +157,7 @@ def build_dashboard_explorer(
         _bump_breakdown(owner_counts, owner_label, trade.transaction_type)
         _bump_breakdown(sector_counts, sector_label, trade.transaction_type)
         _bump_breakdown(politician_counts, politician_label, trade.transaction_type)
-        if trade.ticker:  # skip undisclosed/null tickers from the chart
-            _bump_breakdown(ticker_counts, trade.ticker, trade.transaction_type)
+        _bump_breakdown(ticker_counts, trade.ticker, trade.transaction_type)
 
     lag_distribution = [
         DashboardBreakdownPoint(label="0-7 days", count=sum(1 for lag in lag_values if 0 <= lag <= 7)),

@@ -35,6 +35,7 @@ const CHART_TOOLTIP_STYLE = {
     fontSize: 12,
   },
   labelStyle: { color: "#7d8590" },
+  itemStyle: { color: "#e6edf3" },
 };
 
 // ── Time range presets ────────────────────────────────────────────────────────

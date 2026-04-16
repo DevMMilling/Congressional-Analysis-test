@@ -57,7 +57,12 @@ export const api = {
   getSectorBreakdown: (sector) => request(`/analytics/sector-breakdown?sector=${encodeURIComponent(sector)}`),
 
   // ── Stocks ─────────────────────────────────────────
-  getStocks: (search = "") => request(`/stocks${search ? `?search=${encodeURIComponent(search)}` : ""}`),
+  getStocks: (params = {}) => {
+    const q = typeof params === "string"
+      ? (params ? `search=${encodeURIComponent(params)}` : "")
+      : buildQueryString(params);
+    return request(`/stocks${q ? `?${q}` : ""}`);
+  },
   getStock: (ticker) => request(`/stocks/${encodeURIComponent(ticker)}`),
   getStockHistory: (ticker, params = {}) => {
     const q = buildQueryString(typeof params === "string" ? {} : params);
@@ -99,6 +104,7 @@ export const api = {
   // ── Ingest ─────────────────────────────────────────
   postBackfill: () => request("/ingest/backfill", { method: "POST" }),
   postUpdate: () => request("/ingest/update", { method: "POST" }),
+  postEnrichSectors: () => request("/ingest/enrich-sectors", { method: "POST" }),
 
   // ── System ─────────────────────────────────────────
   getSystemStatus: () => request("/system/status"),

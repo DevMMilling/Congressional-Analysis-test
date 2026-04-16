@@ -19,11 +19,17 @@ router = APIRouter(tags=["stocks"])
 
 
 @router.get("/stocks", response_model=list[TickerSummary])
-def list_stocks(search: str | None = None, db: Session = Depends(get_db)) -> list[TickerSummary]:
+def list_stocks(
+    search: str | None = None,
+    sector: str | None = None,
+    db: Session = Depends(get_db),
+) -> list[TickerSummary]:
     query = select(Issuer).order_by(Issuer.ticker.asc())
     if search:
         query = query.where(Issuer.ticker.ilike(f"%{search}%") | Issuer.issuer_name.ilike(f"%{search}%"))
-    issuers = db.execute(query.limit(100)).scalars().all()
+    if sector:
+        query = query.where(Issuer.sector == sector)
+    issuers = db.execute(query.limit(200)).scalars().all()
     return [TickerSummary(ticker=issuer.ticker, issuer_name=issuer.issuer_name, sector=issuer.sector) for issuer in issuers]
 
 

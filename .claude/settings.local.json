@@ -25,7 +25,15 @@
       "Bash(powershell -NonInteractive -Command \"Test-Path 'c:\\\\Users\\\\DevMat\\\\Documents\\\\repos\\\\Congressional-Analysis-test\\\\frontend\\\\node_modules'\")",
       "Bash(powershell -NonInteractive -Command \"Test-Path 'c:\\\\Users\\\\DevMat\\\\Documents\\\\repos\\\\Congressional-Analysis-test\\\\frontend\\\\node_modules\\\\vite'\")",
       "Bash(cd c:\\\\\\\\Users\\\\\\\\DevMat\\\\\\\\Documents\\\\\\\\repos\\\\\\\\Congressional-Analysis-test)",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "Bash(npm --version)",
+      "Bash(.venv/Scripts/python.exe -c \"import uvicorn; print\\('uvicorn ok'\\)\")",
+      "Bash(npm run *)",
+      "Bash(netstat -ano)",
+      "Bash(findstr \":8000 \")",
+      "Bash(curl -s http://localhost:8000/api/system/status)",
+      "WebFetch(domain:streamlit.io)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ]
   }
 }
