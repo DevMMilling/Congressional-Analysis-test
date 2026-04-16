@@ -50,6 +50,10 @@ async function download(path, params = {}) {
 export const api = {
   // ── Analytics ──────────────────────────────────────
   getSummary: () => request("/analytics/summary"),
+  getDashboardExplorer: (params = {}) => {
+    const q = buildQueryString(params);
+    return request(`/analytics/explorer${q ? `?${q}` : ""}`);
+  },
   getSectorBreakdown: (sector) => request(`/analytics/sector-breakdown?sector=${encodeURIComponent(sector)}`),
 
   // ── Stocks ─────────────────────────────────────────
@@ -66,6 +70,10 @@ export const api = {
     return request(`/politicians${q}`);
   },
   getPolitician: (id) => request(`/politicians/${id}`),
+  getPoliticianActivity: (id, params = {}) => {
+    const q = buildQueryString(params);
+    return request(`/politicians/${id}/trades${q ? `?${q}` : ""}`);
+  },
   comparePoliticians: (ids) => request(`/politicians/compare?ids=${ids.join(",")}`),
 
   // ── Trades ─────────────────────────────────────────

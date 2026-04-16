@@ -23,7 +23,9 @@
       "Bash(powershell -NonInteractive -Command \"Test-Path 'C:\\\\nvm\\\\current\\\\node.exe'\")",
       "Bash(powershell -NonInteractive -Command \"Test-Path 'C:\\\\Users\\\\DevMat\\\\AppData\\\\Roaming\\\\nvm'\")",
       "Bash(powershell -NonInteractive -Command \"Test-Path 'c:\\\\Users\\\\DevMat\\\\Documents\\\\repos\\\\Congressional-Analysis-test\\\\frontend\\\\node_modules'\")",
-      "Bash(powershell -NonInteractive -Command \"Test-Path 'c:\\\\Users\\\\DevMat\\\\Documents\\\\repos\\\\Congressional-Analysis-test\\\\frontend\\\\node_modules\\\\vite'\")"
+      "Bash(powershell -NonInteractive -Command \"Test-Path 'c:\\\\Users\\\\DevMat\\\\Documents\\\\repos\\\\Congressional-Analysis-test\\\\frontend\\\\node_modules\\\\vite'\")",
+      "Bash(cd c:\\\\\\\\Users\\\\\\\\DevMat\\\\\\\\Documents\\\\\\\\repos\\\\\\\\Congressional-Analysis-test)",
+      "Bash(python -c ' *)"
     ]
   }
 }

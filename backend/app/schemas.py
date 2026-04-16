@@ -247,6 +247,53 @@ class AnalyticsSummary(BaseModel):
     prediction_counter: dict
 
 
+class DashboardFilterOptions(BaseModel):
+    parties: list[str] = Field(default_factory=list)
+    chambers: list[str] = Field(default_factory=list)
+    states: list[str] = Field(default_factory=list)
+    transaction_types: list[str] = Field(default_factory=list)
+    owner_types: list[str] = Field(default_factory=list)
+    sectors: list[str] = Field(default_factory=list)
+
+
+class DashboardHeadlineMetrics(BaseModel):
+    total_trades: int = 0
+    buy_count: int = 0
+    sell_count: int = 0
+    unique_politicians: int = 0
+    unique_tickers: int = 0
+    average_lag_days: float | None = None
+    prompt_disclosure_ratio: float = 0.0
+
+
+class DashboardTimelinePoint(BaseModel):
+    date: date
+    trades: int
+    buys: int
+    sells: int
+
+
+class DashboardBreakdownPoint(BaseModel):
+    label: str
+    count: int
+    buy_count: int = 0
+    sell_count: int = 0
+
+
+class DashboardExplorerResponse(BaseModel):
+    available_filters: DashboardFilterOptions
+    headline_metrics: DashboardHeadlineMetrics
+    timeline: list[DashboardTimelinePoint] = Field(default_factory=list)
+    lag_distribution: list[DashboardBreakdownPoint] = Field(default_factory=list)
+    amount_distribution: list[DashboardBreakdownPoint] = Field(default_factory=list)
+    chamber_party_breakdown: list[DashboardBreakdownPoint] = Field(default_factory=list)
+    owner_breakdown: list[DashboardBreakdownPoint] = Field(default_factory=list)
+    sector_breakdown: list[DashboardBreakdownPoint] = Field(default_factory=list)
+    top_politicians: list[DashboardBreakdownPoint] = Field(default_factory=list)
+    top_tickers: list[DashboardBreakdownPoint] = Field(default_factory=list)
+    recent_disclosures: list[TradeEvent] = Field(default_factory=list)
+
+
 class BacktestResult(BaseModel):
     period_start: date | None = None
     period_end: date | None = None
