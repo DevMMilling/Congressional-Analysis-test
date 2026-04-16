@@ -50,3 +50,21 @@ def _clean_float(value: object) -> float | None:
         return float(value)
     except Exception:
         return None
+
+
+def enrich_issuer_metadata(db: Session, ticker: str) -> None:
+    """Fetch sector/industry from yfinance and populate Issuer row if missing."""
+    try:
+        info = yf.Ticker(ticker).info
+        sector = info.get("sector")
+        industry = info.get("industry")
+        if sector or industry:
+            issuer = db.execute(select(Issuer).where(Issuer.ticker == ticker)).scalar_one_or_none()
+            if issuer:
+                if sector and not issuer.sector:
+                    issuer.sector = sector
+                if industry and not issuer.industry:
+                    issuer.industry = industry
+                db.commit()
+    except Exception:
+        pass

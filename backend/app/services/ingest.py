@@ -14,6 +14,7 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 from ..config import get_settings
 from ..models import CommitteeRole, Issuer, Politician, RawTradePayload, Trade
 from ..utils import parse_human_date, parse_money_range, slugify
+from .market_data import enrich_issuer_metadata
 
 
 settings = get_settings()
@@ -223,6 +224,10 @@ def upsert_trade(db: Session, scraped: ScrapedTrade) -> Trade:
             issuer = Issuer(ticker=scraped.ticker, issuer_name=scraped.issuer_name, sector=None)
             db.add(issuer)
             db.flush()
+            try:
+                enrich_issuer_metadata(db, scraped.ticker)
+            except Exception:
+                pass
 
     amount_low, amount_high, amount_mid = parse_money_range(scraped.amount_text)
     trade = db.execute(select(Trade).where(Trade.source_trade_id == scraped.source_trade_id)).scalar_one_or_none()

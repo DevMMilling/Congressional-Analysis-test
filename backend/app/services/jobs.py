@@ -5,6 +5,9 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 
 from ..models import JobRun
+from ..logging_utils import get_logger, log_event
+
+_logger = get_logger(__name__)
 
 
 def create_job(db: Session, job_type: str, message: str | None = None) -> JobRun:
@@ -12,6 +15,7 @@ def create_job(db: Session, job_type: str, message: str | None = None) -> JobRun
     db.add(job)
     db.commit()
     db.refresh(job)
+    log_event(_logger, "job_created", job_id=job.id, job_type=job.job_type)
     return job
 
 
@@ -22,6 +26,7 @@ def mark_job_running(db: Session, job: JobRun, details: dict | None = None) -> J
     db.add(job)
     db.commit()
     db.refresh(job)
+    log_event(_logger, "job_started", job_id=job.id, job_type=job.job_type)
     return job
 
 
@@ -33,6 +38,7 @@ def mark_job_finished(db: Session, job: JobRun, message: str, details: dict | No
     db.add(job)
     db.commit()
     db.refresh(job)
+    log_event(_logger, "job_completed", job_id=job.id, message=message or "")
     return job
 
 
@@ -43,4 +49,5 @@ def mark_job_failed(db: Session, job: JobRun, message: str) -> JobRun:
     db.add(job)
     db.commit()
     db.refresh(job)
+    log_event(_logger, "job_failed", job_id=job.id, message=message or "")
     return job

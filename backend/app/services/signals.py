@@ -3,13 +3,18 @@ from __future__ import annotations
 from collections import defaultdict
 from datetime import date
 
-from sqlalchemy import desc, select
+from sqlalchemy import desc, func, select
 from sqlalchemy.orm import Session
 
 from ..models import Prediction, Signal, Trade
 
 
-def rebuild_signals(db: Session) -> int:
+def rebuild_signals(db: Session, stale_guard: bool = True) -> int:
+    if stale_guard:
+        max_pred_at = db.execute(select(func.max(Prediction.created_at))).scalar_one()
+        max_sig_at = db.execute(select(func.max(Signal.created_at))).scalar_one()
+        if max_pred_at and max_sig_at and max_pred_at <= max_sig_at:
+            return {"status": "skipped", "reason": "Predictions unchanged since last signal rebuild."}
     db.query(Signal).delete()
     db.commit()
 

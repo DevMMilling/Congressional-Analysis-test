@@ -21,6 +21,13 @@ class JobRunResponse(BaseModel):
     details: dict | None = None
 
 
+class PagingEnvelope(BaseModel):
+    total_count: int
+    page: int
+    page_size: int
+    page_count: int
+
+
 class CommitteeRoleResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -51,6 +58,41 @@ class PoliticianProfile(PoliticianSummary):
     average_disclosure_lag: float | None = None
     most_traded_sectors: list[str] = Field(default_factory=list)
     insider_risk_summary: dict = Field(default_factory=dict)
+
+
+class PoliticianActivitySummary(BaseModel):
+    trade_count: int = 0
+    signal_count: int = 0
+    buy_count: int = 0
+    sell_count: int = 0
+    average_disclosure_lag: float | None = None
+    lag_distribution: list[dict] = Field(default_factory=list)
+    sector_exposure: list[dict] = Field(default_factory=list)
+
+
+class PoliticianActivityResponse(BaseModel):
+    politician: PoliticianSummary
+    summary: PoliticianActivitySummary
+    trades: list["TradeEvent"] = Field(default_factory=list)
+    signals: list["SignalResponse"] = Field(default_factory=list)
+
+
+class PoliticianComparisonEntry(BaseModel):
+    politician_id: int
+    name: str
+    party: str | None = None
+    chamber: str | None = None
+    trade_count: int
+    buy_count: int
+    sell_count: int
+    average_disclosure_lag: float | None = None
+    top_sectors: list[str] = Field(default_factory=list)
+    signal_count: int = 0
+    insider_risk_ratio: float = 0.0
+
+
+class PoliticianComparisonResponse(BaseModel):
+    entries: list[PoliticianComparisonEntry] = Field(default_factory=list)
 
 
 class TickerSummary(BaseModel):
@@ -108,6 +150,18 @@ class TradeEvent(BaseModel):
     notes: str | None = None
 
 
+class TradeDetailResponse(TradeEvent):
+    raw_payload: dict | None = None
+    issuer_sector: str | None = None
+    issuer_industry: str | None = None
+    issuer_exchange: str | None = None
+    politician_slug: str | None = None
+    politician_party: str | None = None
+    politician_chamber: str | None = None
+    politician_state: str | None = None
+    politician_roles: list[CommitteeRoleResponse] = Field(default_factory=list)
+
+
 class SignalResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -124,6 +178,14 @@ class SignalResponse(BaseModel):
     metadata_json: dict | None = None
 
 
+class SignalExplainabilityResponse(BaseModel):
+    signal: SignalResponse
+    linked_trade: TradeEvent | None = None
+    linked_prediction: dict | None = None
+    linked_feature_snapshot: dict | None = None
+    related_predictions: list[dict] = Field(default_factory=list)
+
+
 class TickerProfile(TickerSummary):
     trade_count: int = 0
     politician_count: int = 0
@@ -132,6 +194,21 @@ class TickerProfile(TickerSummary):
     latest_signals: list[SignalResponse] = Field(default_factory=list)
     recent_trades: list[TradeEvent] = Field(default_factory=list)
     model_scores: dict = Field(default_factory=dict)
+
+
+class StockComparisonSeries(BaseModel):
+    ticker: str
+    issuer_name: str
+    sector: str | None = None
+    latest_close: float | None = None
+    change_pct: float | None = None
+    history: list[PriceHistoryPoint] = Field(default_factory=list)
+    trade_markers: list[TradeMarker] = Field(default_factory=list)
+
+
+class StockComparisonResponse(BaseModel):
+    tickers: list[str] = Field(default_factory=list)
+    series: list[StockComparisonSeries] = Field(default_factory=list)
 
 
 class TickerPriceHistoryResponse(BaseModel):
@@ -179,6 +256,7 @@ class BacktestResult(BaseModel):
     max_drawdown: float
     trade_count: int
     sharpe_like: float
+    annualized_volatility: float = 0.0
     daily_curve: list[dict]
     trade_ledger: list[dict]
 
@@ -198,6 +276,12 @@ class AlertSubscriptionResponse(BaseModel):
     enabled: bool
     minimum_confidence: float
     signal_types: list[str]
+
+
+class AlertSubscriptionUpdate(BaseModel):
+    enabled: bool | None = None
+    minimum_confidence: float | None = None
+    signal_types: list[str] | None = None
 
 
 class AlertHistoryResponse(BaseModel):
@@ -229,3 +313,45 @@ class BacktestQuery(BaseModel):
     min_confidence: float = 0.65
     signal_type: str | None = None
     transaction_cost_bps: float = 10.0
+
+
+class BacktestComparisonScenario(BacktestQuery):
+    label: str
+
+
+class BacktestComparisonRequest(BaseModel):
+    scenarios: list[BacktestComparisonScenario] = Field(default_factory=list)
+
+
+class BacktestScenarioResult(BaseModel):
+    label: str
+    result: BacktestResult
+
+
+class BacktestComparisonResponse(BaseModel):
+    scenarios: list[BacktestScenarioResult] = Field(default_factory=list)
+
+
+class ResearchReportRequest(BaseModel):
+    politician_id: int | None = None
+    ticker: str | None = None
+    signal_type: str | None = None
+    min_confidence: float | None = None
+    trade_limit: int = 100
+    signal_limit: int = 100
+    include_backtest: bool = False
+    backtest: BacktestQuery | None = None
+
+
+class ResearchReportResponse(BaseModel):
+    generated_at: datetime
+    filters: dict = Field(default_factory=dict)
+    summary: AnalyticsSummary | None = None
+    politician: PoliticianProfile | None = None
+    stock: TickerProfile | None = None
+    trades: list[TradeEvent] = Field(default_factory=list)
+    signals: list[SignalResponse] = Field(default_factory=list)
+    backtest: BacktestResult | None = None
+
+
+PoliticianActivityResponse.model_rebuild()
